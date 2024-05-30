@@ -51,6 +51,7 @@ passport.deserializeUser((username, done) => {
 
 // 회원가입 라우트
 app.post('/register', (req, res) => {
+    console.log("요청 받았음")
   const { username, password } = req.body;
   if (users.find(u => u.username === username)) {
     return res.status(400).send('User already exists');
