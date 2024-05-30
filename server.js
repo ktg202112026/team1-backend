@@ -11,7 +11,7 @@ const PORT = 3000;
 const users = [];
 
 // 미들웨어 설정
-app.use(cors({ origin: 'http://25.78.91.27/', // 프론트엔드 주소 
+app.use(cors({ origin: 'http://52.78.91.27/', // 프론트엔드 주소 
 credentials: true, })); 
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false, cookie:
  { httpOnly: true, secure: false, 
