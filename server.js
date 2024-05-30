@@ -15,7 +15,7 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Middleware setup
-app.use(cors({ origin: 'http://13.209.41.253:5173/', credentials: true }));
+app.use(cors({ origin: 'http://25.78.91.27/', credentials: true }));
 app.use(session({
   secret: 'secret',
   resave: false,
