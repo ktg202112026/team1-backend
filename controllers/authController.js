@@ -1,20 +1,22 @@
 // controllers/authController.js
 
 const passport = require('passport');
-const User = require('../models/user');
+const { supabase } = require('../db'); // Assuming you have a db.js file for Supabase setup
 
-exports.register = (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).send('Username and password are required');
+exports.register = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const { user, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      return res.status(400).send(error.message);
+    }
+    res.send('User registered');
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
   }
-
-  // Your validation logic here (if needed)
-
-  const user = new User(username, password);
-  // Save user to database or any storage mechanism
-
-  res.send('User registered');
 };
 
 exports.login = passport.authenticate('local', {
