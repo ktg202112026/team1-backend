@@ -1,3 +1,5 @@
+//server.js
+
 const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -9,7 +11,7 @@ const supabase = require('./db');
 const app = express();
 const PORT = 3000;
 
-// 예제니까 사용자 데이터를 메모리에 저장
+// 예제니까 사용자 데이터 메모리에 저장
 const users = [];
 
 // 미들웨어 설정

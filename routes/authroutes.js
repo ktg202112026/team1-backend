@@ -1,37 +1,31 @@
-// routes/authRoutes.js
 const express = require('express');
-const passport = require('passport');
 const router = express.Router();
 const authController = require('../controllers/authController');
 
-// GitHub authentication route
-router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+// Supabase OAuth routes
+router.get('/auth/github', (req, res) => {
+  const redirectTo = supabase.auth.getUrlForProvider('github', {
+    redirectTo: 'http://localhost:3000/auth/github/callback' // Your callback URL
+  });
+  res.redirect(redirectTo);
+});
 
-// GitHub callback route
-router.get('/auth/github/callback',
-  passport.authenticate('github', {
-    successRedirect: '/user',
-    failureRedirect: '/login'
-  })
-);
+router.get('/auth/google', (req, res) => {
+  const redirectTo = supabase.auth.getUrlForProvider('google', {
+    redirectTo: 'http://localhost:3000/auth/google/callback' // Your callback URL
+  });
+  res.redirect(redirectTo);
+});
 
-// Google authentication route
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// Supabase OAuth callback routes
+router.get('/auth/:provider/callback', authController.oauthCallback);
 
-// Google callback route
-router.get('/auth/google/callback',
-  passport.authenticate('google', {
-    successRedirect: '/user',
-    failureRedirect: '/login'
-  })
-);
-
-// Existing routes
+// Local authentication routes
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.get('/user', authController.isAuthenticated, (req, res) => {
-  res.send(req.user);
+  res.send(req.session.user);
 });
 
 module.exports = router;
