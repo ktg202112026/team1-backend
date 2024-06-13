@@ -3,6 +3,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
+const supabase = require('./db');
 
 const app = express();
 const PORT = 3000;
@@ -85,9 +87,12 @@ app.get('/user', (req, res) => {
     res.status(401).send('Not authenticated');
   }
 });
+// Use the authentication routes
+app.use(authRoutes);
 
 // req.isAuthenticated()는 Passport에서 제공하는 함수입니다. 이 함수는 현재 요청의 인증 상태를 확인하는 데 사용됩니다.
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+

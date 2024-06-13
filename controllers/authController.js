@@ -1,31 +1,43 @@
 // controllers/authController.js
-
 const passport = require('passport');
-const User = require('../models/user');
+const supabase = require('../db'); // Import Supabase client
 
-exports.register = (req, res) => {
+exports.register = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).send('Username and password are required');
   }
 
-  // Your validation logic here (if needed)
+  try {
+    // Use Supabase to create a new user
+    const { data, error } = await supabase.auth.signUp({
+      email: username,
+      password: password
+    });
 
-  const user = new User(username, password);
-  // Save user to database or any storage mechanism
+    if (error) {
+      return res.status(400).send(error.message);
+    }
 
-  res.send('User registered');
+    res.send('User registered');
+  } catch (err) {
+    res.status(500).send('Server error');
+  }
 };
 
 exports.login = passport.authenticate('local', {
   successRedirect: '/user',
   failureRedirect: '/login',
-  failureFlash: true // Optional flash messages for failed login
+  failureFlash: true
 });
 
 exports.logout = (req, res) => {
-  req.logout();
-  res.send('Logged out');
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).send('Logout error');
+    }
+    res.send('Logged out');
+  });
 };
 
 exports.isAuthenticated = (req, res, next) => {
